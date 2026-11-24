@@ -8,6 +8,8 @@ export interface EmailViewerSettings {
 	showAllHeaders: boolean;
 	/** Folder for notes created from emails. Empty = next to the email file. */
 	noteFolder: string;
+	/** Show embedded emails as preview cards (uses an undocumented Obsidian API). */
+	embedCards: boolean;
 }
 
 export const DEFAULT_SETTINGS: EmailViewerSettings = {
@@ -16,6 +18,7 @@ export const DEFAULT_SETTINGS: EmailViewerSettings = {
 	htmlTheme: "light",
 	showAllHeaders: false,
 	noteFolder: "",
+	embedCards: true,
 };
 
 export class EmailViewerSettingTab extends PluginSettingTab {
@@ -60,6 +63,12 @@ export class EmailViewerSettingTab extends PluginSettingTab {
 				name: "Folder for notes from emails",
 				desc: 'Where notes created from emails are saved. Leave empty to save them next to the email file.',
 				control: { type: "folder", key: "noteFolder", placeholder: "Next to the email" },
+			},
+			{
+				name: "Email preview cards in embeds",
+				desc: "Show embedded emails (![[message.eml]]) as a card with subject, sender, date and a preview. Uses an undocumented Obsidian feature; turn this off if embeds misbehave after an Obsidian update.",
+				aliases: ["embed", "card", "subject", "link"],
+				control: { type: "toggle", key: "embedCards", defaultValue: DEFAULT_SETTINGS.embedCards },
 			},
 		];
 	}
@@ -133,6 +142,18 @@ export class EmailViewerSettingTab extends PluginSettingTab {
 						this.plugin.settings.noteFolder = v.trim().replace(/^\/+|\/+$/g, "");
 						await this.plugin.saveSettings();
 					}),
+			);
+
+		new Setting(containerEl)
+			.setName("Email preview cards in embeds")
+			.setDesc(
+				"Show embedded emails (![[message.eml]]) as a card with subject, sender, date and a preview. Uses an undocumented Obsidian feature; turn this off if embeds misbehave after an Obsidian update.",
+			)
+			.addToggle((t) =>
+				t.setValue(this.plugin.settings.embedCards).onChange(async (v) => {
+					this.plugin.settings.embedCards = v;
+					await this.plugin.saveSettings();
+				}),
 			);
 	}
 }

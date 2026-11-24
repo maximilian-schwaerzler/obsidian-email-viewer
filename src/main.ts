@@ -1,10 +1,12 @@
-import { Notice, Plugin, TFile, normalizePath, htmlToMarkdown } from "obsidian";
+import { MarkdownView, Notice, Plugin, TFile, normalizePath, htmlToMarkdown } from "obsidian";
 import { DEFAULT_SETTINGS, EmailViewerSettingTab, EmailViewerSettings } from "./settings";
 import { EmailView, VIEW_TYPE_EMAIL, formatAddress } from "./view";
 import { ParsedEmail, SUPPORTED_EXTENSIONS, parseEmailFile } from "./parse";
+import { registerEmailEmbeds } from "./embed";
 
 export default class EmailViewerPlugin extends Plugin {
 	settings: EmailViewerSettings = DEFAULT_SETTINGS;
+	private unregisterEmbeds: (() => void) | null = null;
 
 	async onload() {
 		await this.loadSettings();
@@ -12,6 +14,8 @@ export default class EmailViewerPlugin extends Plugin {
 		this.registerView(VIEW_TYPE_EMAIL, (leaf) => new EmailView(leaf, this));
 		this.registerExtensions([...SUPPORTED_EXTENSIONS], VIEW_TYPE_EMAIL);
 		this.addSettingTab(new EmailViewerSettingTab(this.app, this));
+		this.updateEmbeds();
+		this.register(() => this.unregisterEmbeds?.());
 
 		// Re-render open emails when the file changes on disk (e.g. synced or replaced).
 		this.registerEvent(
@@ -79,8 +83,43 @@ export default class EmailViewerPlugin extends Plugin {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, saved);
 	}
 
+	/** Register or unregister the embed cards to match the setting. Returns whether anything changed. */
+	private updateEmbeds(): boolean {
+		if (this.settings.embedCards && !this.unregisterEmbeds) {
+			this.unregisterEmbeds = registerEmailEmbeds(this.app);
+		} else if (!this.settings.embedCards && this.unregisterEmbeds) {
+			this.unregisterEmbeds();
+			this.unregisterEmbeds = null;
+		} else {
+			return false;
+		}
+		return true;
+	}
+
+	/** Re-render open notes that embed an email, so a changed embed setting shows up immediately. */
+	private async refreshEmailEmbeds() {
+		for (const leaf of this.app.workspace.getLeavesOfType("markdown")) {
+			const view = leaf.view;
+			if (!(view instanceof MarkdownView) || !view.file) continue;
+			const embeds = this.app.metadataCache.getFileCache(view.file)?.embeds ?? [];
+			const embedsEmail = embeds.some((e) => {
+				const target = this.app.metadataCache.getFirstLinkpathDest(e.link.split("#")[0], view.file!.path);
+				return target ? this.isEmailFile(target) : false;
+			});
+			if (!embedsEmail) continue;
+
+			// Both the reading view and the (possibly hidden) editor cache rendered embeds;
+			// reopening the note is the only public way to rebuild them. Mode and scroll position are kept.
+			const state = leaf.getViewState();
+			const eState = view.getEphemeralState();
+			await leaf.setViewState({ type: "empty" });
+			await leaf.setViewState(state, eState);
+		}
+	}
+
 	async saveSettings() {
 		await this.saveData(this.settings);
+		if (this.updateEmbeds()) await this.refreshEmailEmbeds();
 		for (const view of this.emailViews()) void view.reload();
 	}
 

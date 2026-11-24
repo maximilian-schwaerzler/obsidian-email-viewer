@@ -20,6 +20,7 @@ Open email files directly in Obsidian, the same way you open PDFs or Markdown no
 - Switch between the HTML and plain-text versions, and view all raw headers.
 - Attachments: open them (they're saved to your vault's attachment folder first), save them to the vault, or download them. Forwarded `.eml` and `.msg` attachments open in the viewer too.
 - **Create note from email**: makes a Markdown note with `subject`, `from`, `to`, `cc`, `date`, `attachments` and a `source` link as properties, and the body converted to Markdown. Available from the view toolbar, the command palette and the file context menu.
+- **Embed cards**: `![[message.eml]]` shows a card with the subject, sender, date, attachment count and a preview, instead of the bare filename. Click it to open the email. This uses an undocumented Obsidian API, so it can be turned off in settings.
 - The view reloads automatically when the file changes on disk.
 - Works on mobile (no Node.js dependencies).
 
@@ -47,6 +48,7 @@ To release: `npm version patch` (or `minor`/`major`) updates `manifest.json` and
 - `src/parse.ts`: turns every format into one `ParsedEmail` model (postal-mime for MIME, @kenjiuno/msgreader for Outlook). It has no Obsidian dependency.
 - `src/html.ts`: sanitises the HTML, applies the CSP, resolves `cid:` images and detects remote content.
 - `src/view.ts`: the `FileView` (message rendering, mbox list, attachments).
+- `src/embed.ts`: the preview card for `![[…]]` embeds.
 - `src/main.ts`: plugin registration, commands, Create note.
 - `src/shims/iconv-lite.ts`: a small TextDecoder-based replacement for iconv-lite. It keeps the bundle small (~175 KB) and mobile-compatible.
 
