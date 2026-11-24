@@ -1,0 +1,25 @@
+From alice@example.org Mon Nov  2 10:00:00 2026
+From: Alice <alice@example.org>
+To: bob@example.org
+Subject: First message
+Date: Mon, 02 Nov 2026 10:00:00 +0000
+
+Line one.
+>From the archive: this line was escaped.
+>>From double escaped.
+
+From bob@example.org Mon Nov  2 11:00:00 2026
+From: Bob <bob@example.org>
+To: alice@example.org
+Subject: Second message
+Date: Mon, 02 Nov 2026 11:00:00 +0000
+Content-Type: text/html; charset=utf-8
+
+<p>HTML <i>only</i> reply</p>
+
+From carol@example.org Mon Nov  2 12:00:00 2026
+From: carol@example.org
+Subject: Third
+Date: Mon, 02 Nov 2026 12:00:00 +0000
+
+Third body.

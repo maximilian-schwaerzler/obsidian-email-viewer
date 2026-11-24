@@ -1,0 +1,8 @@
+From: Bob <bob@example.org>
+To: alice@example.org
+Subject: Plain text only
+Date: Wed, 04 Nov 2026 12:00:00 +0000
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+
+Café at noon? See www.example.com
