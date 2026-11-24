@@ -134,10 +134,10 @@ function baseCss(theme: "light" | "adaptive"): string {
 	if (theme === "light") {
 		return `:root { color-scheme: light; } body { background: #ffffff; color: #1f1f1f; } a { color: #0b57d0; }` + common;
 	}
-	const cs = getComputedStyle(document.body);
+	const cs = getComputedStyle(activeDocument.body);
 	const v = (name: string, fallback: string) => cs.getPropertyValue(name).trim() || fallback;
 	return (
-		`:root { color-scheme: ${document.body.hasClass("theme-dark") ? "dark" : "light"}; }
+		`:root { color-scheme: ${activeDocument.body.hasClass("theme-dark") ? "dark" : "light"}; }
 		 body { background: transparent; color: ${v("--text-normal", "inherit")}; }
 		 a { color: ${v("--text-accent", "inherit")}; }` + common
 	);

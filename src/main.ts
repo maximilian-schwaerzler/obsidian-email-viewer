@@ -75,7 +75,8 @@ export default class EmailViewerPlugin extends Plugin {
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		const saved = (await this.loadData()) as Partial<EmailViewerSettings> | null;
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, saved);
 	}
 
 	async saveSettings() {
@@ -107,7 +108,7 @@ export default class EmailViewerPlugin extends Plugin {
 			const file = await this.app.vault.create(path, `# ${email.subject || "(no subject)"}\n\n${body}\n`);
 
 			const linktext = this.app.metadataCache.fileToLinktext(source, path, false);
-			await this.app.fileManager.processFrontMatter(file, (fm) => {
+			await this.app.fileManager.processFrontMatter(file, (fm: Record<string, unknown>) => {
 				fm.subject = email.subject;
 				if (email.from.length) fm.from = email.from.map(formatAddress).join(", ");
 				if (email.to.length) fm.to = email.to.map(formatAddress);

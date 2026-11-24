@@ -2,8 +2,9 @@
 	"id": "email-viewer",
 	"name": "Email Viewer",
 	"version": "1.0.0",
-	"minAppVersion": "1.5.0",
-	"description": "View .eml, .emlx, .mbox and Outlook .msg email files directly in Obsidian, with attachments, inline images and remote-content blocking.",
-	"author": "Maximilian",
-	"isDesktopOnly": false
+	"minAppVersion": "1.5.7",
+	"description": "View .eml, .emlx, .mbox and Outlook .msg email files directly in your vault, with attachments, inline images and remote-content blocking.",
+	"author": "Maximilian Schwärzler",
+	"isDesktopOnly": false,
+	"authorUrl": "https://github.com/maximilian-schwaerzler"
 }

@@ -46,8 +46,8 @@ const URL_RE = /\b(?:https?:\/\/|mailto:|www\.)[^\s<>"']+/gi;
 function appendLinkified(el: HTMLElement, text: string) {
 	let last = 0;
 	for (const m of text.matchAll(URL_RE)) {
-		let url = m[0].replace(/[.,;:!?)\]}>]+$/, "");
-		const start = m.index!;
+		const url = m[0].replace(/[.,;:!?)\]}>]+$/, "");
+		const start = m.index;
 		if (start > last) el.appendText(text.slice(last, start));
 		const href = url.toLowerCase().startsWith("www.") ? `https://${url}` : url;
 		el.createEl("a", { text: url, href, cls: "external-link", attr: { target: "_blank", rel: "noopener" } });
@@ -477,7 +477,7 @@ export class EmailView extends FileView {
 				lastHeight = h;
 				// Include the frame's own border so no inner scrollbar appears.
 				const chrome = iframe.offsetHeight - iframe.clientHeight;
-				iframe.style.height = `${h + Math.max(0, chrome)}px`;
+				iframe.setCssStyles({ height: `${h + Math.max(0, chrome)}px` });
 			};
 			fit();
 			const ro = new ResizeObserver(() => fit());
