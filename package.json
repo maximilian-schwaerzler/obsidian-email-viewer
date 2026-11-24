@@ -1,0 +1,31 @@
+{
+  "name": "obsidian-email-viewer",
+  "version": "1.0.0",
+  "description": "View .eml, .emlx, .mbox and .msg email files directly inside Obsidian.",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "test": "esbuild test/parse.test.ts --bundle --platform=node --format=cjs --alias:iconv-lite=./src/shims/iconv-lite.ts --outfile=node_modules/.cache/parse.test.cjs --log-level=warning && node node_modules/.cache/parse.test.cjs"
+  },
+  "keywords": [
+    "obsidian",
+    "plugin",
+    "email",
+    "eml",
+    "msg",
+    "mbox"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "builtin-modules": "^3.3.0",
+    "esbuild": "^0.28.2",
+    "obsidian": "^1.14.4",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@kenjiuno/msgreader": "^1.29.0",
+    "postal-mime": "^4.2.1"
+  }
+}
