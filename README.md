@@ -34,6 +34,8 @@ To install manually, download `main.js`, `manifest.json` and `styles.css` from t
 
 The plugin makes no network requests of its own and collects no data. Remote images in emails are blocked unless you choose to load them for a message, or turn blocking off in settings.
 
+The plugin never reads your clipboard. It writes to it only when you choose **Copy address** or **Copy name and address** from the menu on an address in an email's header.
+
 ## Development
 
 ```bash
