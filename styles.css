@@ -1,7 +1,7 @@
 /* ---------- Email Viewer ---------- */
 
-.email-viewer {
-	padding: 0 !important;
+.workspace-leaf-content[data-type="email-viewer"] > .view-content.email-viewer {
+	padding: 0;
 	display: flex;
 	flex-direction: column;
 }
@@ -101,16 +101,16 @@
 	margin-top: var(--size-4-3);
 }
 
-.email-viewer-tool {
+.email-viewer-toolbar .clickable-icon.email-viewer-tool {
 	display: inline-flex;
 	align-items: center;
 	gap: var(--size-2-2);
 	font-size: var(--font-ui-small);
-	width: auto !important;
-	padding: var(--size-2-2) var(--size-4-2) !important;
+	width: auto;
+	padding: var(--size-2-2) var(--size-4-2);
 }
 
-.email-viewer-tool.is-active {
+.email-viewer-toolbar .clickable-icon.email-viewer-tool.is-active {
 	background: var(--background-modifier-active-hover);
 	color: var(--text-accent);
 }

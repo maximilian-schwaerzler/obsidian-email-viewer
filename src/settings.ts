@@ -58,7 +58,7 @@ export class EmailViewerSettingTab extends PluginSettingTab {
 			},
 			{
 				name: "Folder for notes from emails",
-				desc: 'Where "Create note from email" puts new notes. Leave empty to create them next to the email file.',
+				desc: 'Where notes created from emails are saved. Leave empty to save them next to the email file.',
 				control: { type: "folder", key: "noteFolder", placeholder: "Next to the email" },
 			},
 		];
@@ -124,7 +124,7 @@ export class EmailViewerSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName("Folder for notes from emails")
-			.setDesc('Where "Create note from email" puts new notes. Leave empty to create them next to the email file.')
+			.setDesc('Where notes created from emails are saved. Leave empty to save them next to the email file.')
 			.addText((t) =>
 				t
 					.setPlaceholder("e.g. Inbox/Notes")

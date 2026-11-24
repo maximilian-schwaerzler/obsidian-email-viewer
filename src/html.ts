@@ -97,30 +97,31 @@ export function prepareHtml(html: string, opts: PrepareOptions): PreparedHtml {
 	});
 	doc.querySelectorAll("link[rel~='stylesheet' i]").forEach(() => (hasRemoteContent = true));
 
-	const head = doc.head;
-	const csp = doc.createElement("meta");
-	csp.setAttribute("http-equiv", "Content-Security-Policy");
-	csp.setAttribute(
-		"content",
-		opts.allowRemote
-			? "default-src 'none'; img-src * data: blob:; media-src * data: blob:; style-src * 'unsafe-inline'; font-src * data:"
-			: "default-src 'none'; img-src data: blob:; media-src data: blob:; style-src 'unsafe-inline'; font-src data:",
-	);
-	head.prepend(csp);
+	const policy = opts.allowRemote
+		? "default-src 'none'; img-src * data: blob:; media-src * data: blob:; style-src * 'unsafe-inline'; font-src * data:"
+		: "default-src 'none'; img-src data: blob:; media-src data: blob:; style-src 'unsafe-inline'; font-src data:";
 
-	const charset = doc.createElement("meta");
-	charset.setAttribute("charset", "utf-8");
-	head.prepend(charset);
+	// Build the document skeleton ourselves rather than splicing into the email's
+	// serialized markup, so the CSP is always the first thing in <head> no matter
+	// what the email contains. Base styles come before the email's own CSS so it wins.
+	const root = doc.documentElement;
+	const langAttrs = ["lang", "dir"]
+		.filter((a) => root.hasAttribute(a))
+		.map((a) => ` ${a}="${escapeAttr(root.getAttribute(a)!)}"`)
+		.join("");
+	const srcdoc =
+		`<!DOCTYPE html>\n<html${langAttrs}><head>` +
+		`<meta charset="utf-8">` +
+		`<meta http-equiv="Content-Security-Policy" content="${escapeAttr(policy)}">` +
+		`<style>${baseCss(opts.theme)}</style>` +
+		doc.head.innerHTML +
+		`</head>${doc.body.outerHTML}</html>`;
 
-	const style = doc.createElement("style");
-	style.textContent = baseCss(opts.theme);
-	head.prepend(style); // prepend so the email's own CSS wins
+	return { srcdoc, hasRemoteContent, usedContentIds };
+}
 
-	return {
-		srcdoc: "<!DOCTYPE html>\n" + doc.documentElement.outerHTML,
-		hasRemoteContent,
-		usedContentIds,
-	};
+function escapeAttr(value: string): string {
+	return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 function baseCss(theme: "light" | "adaptive"): string {
