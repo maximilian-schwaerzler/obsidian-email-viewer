@@ -2,6 +2,8 @@
 
 Open email files directly in Obsidian, the same way you open PDFs or Markdown notes.
 
+![An email opened in Obsidian, showing headers, the blocked-remote-content notice, the message body and an attachment](images/screenshot.png)
+
 | Format  | Source                                   |
 | ------- | ---------------------------------------- |
 | `.eml`  | Standard RFC 822 / MIME (Thunderbird, Gmail export, most clients) |
@@ -21,21 +23,26 @@ Open email files directly in Obsidian, the same way you open PDFs or Markdown no
 - The view reloads automatically when the file changes on disk.
 - Works on mobile (no Node.js dependencies).
 
-## Install (manual)
+## Install
 
-```bash
-npm install
-npm run build
-```
+In Obsidian, open *Settings → Community plugins → Browse*, search for **Email Viewer**, then install and enable it.
 
-Copy `main.js`, `manifest.json` and `styles.css` to `<vault>/.obsidian/plugins/email-viewer/`, then enable **Email Viewer** under *Settings → Community plugins*.
+To install manually, download `main.js`, `manifest.json` and `styles.css` from the [latest release](https://github.com/maximilian-schwaerzler/obsidian-email-viewer/releases/latest) into `<vault>/.obsidian/plugins/email-viewer/`, then enable **Email Viewer** under *Settings → Community plugins*.
+
+## Privacy
+
+The plugin makes no network requests of its own and collects no data. Remote images in emails are blocked unless you choose to load them for a message, or turn blocking off in settings.
 
 ## Development
 
 ```bash
+npm install
 npm run dev     # rebuild on change
 npm test        # parser tests against fixtures in test/fixtures
+npm run lint    # Obsidian's review rules (eslint-plugin-obsidianmd)
 ```
+
+To release: `npm version patch` (or `minor`/`major`) updates `manifest.json` and `versions.json`, then `git push --follow-tags`. The GitHub workflow builds the plugin and publishes the release.
 
 - `src/parse.ts`: turns every format into one `ParsedEmail` model (postal-mime for MIME, @kenjiuno/msgreader for Outlook). It has no Obsidian dependency.
 - `src/html.ts`: sanitises the HTML, applies the CSP, resolves `cid:` images and detects remote content.
