@@ -26,7 +26,7 @@ Open email files directly in Obsidian, the same way you open PDFs or Markdown no
 
 ## Install
 
-In Obsidian, open *Settings → Community plugins → Browse*, search for **Email Viewer**, then install and enable it.
+In Obsidian, open *Settings → Community plugins → Browse*, search for **Email Viewer**, then install and enable it. You can also find it on the [Obsidian community plugin site](https://community.obsidian.md/plugins/email-viewer).
 
 To install manually, download `main.js`, `manifest.json` and `styles.css` from the [latest release](https://github.com/maximilian-schwaerzler/obsidian-email-viewer/releases/latest) into `<vault>/.obsidian/plugins/email-viewer/`, then enable **Email Viewer** under *Settings → Community plugins*.
 
