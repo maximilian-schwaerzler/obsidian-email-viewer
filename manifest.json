@@ -1,7 +1,7 @@
 {
 	"id": "email-viewer",
 	"name": "Email Viewer",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"minAppVersion": "1.5.7",
 	"description": "View .eml, .emlx, .mbox and Outlook .msg email files directly in your vault, with attachments, inline images and remote-content blocking.",
 	"author": "Maximilian Schwärzler",
